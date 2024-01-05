@@ -1,66 +1,65 @@
 import socket
-from scapy.all import DNSQR, sniff
+from scapy.all import DNSQR, sniff, ICMP
 import binascii
 
-def receive_file_dns(packet):
-    # Check if the packet has a DNS query
-    if packet.haslayer(DNSQR):
-        # Get the domain name from the query
-        domain = packet[DNSQR].qname.decode()
 
-        # Remove the '.example.com' suffix
-        hex_data = domain.replace('.example.com', '')
-
-        try:
-            # Decode the file data
-            file_data = binascii.unhexlify(hex_data)
-
-            # Write the file data to a file
-            with open('received_file.txt', 'ab') as file:
-                file.write(file_data)
-        except binascii.Error:
-            print(f"Non-hexadecimal data found: {hex_data}")
+def receive_file_dns():
+   s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+   s.connect(("192.168.110.6", 12345))
+   data = s.recv(1024)
+   print(f"Received from server: {data.decode()}")
+   s.close()
 
 
+def receive_file_icmp():
+  s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+  s.connect(("192.168.1.122", 12343))  # Connect to the server
+  with open("received_file.txt", "wb") as f:
+      while True:
+          data = s.recv(1024)
+          if not data:
+              break  # The file has been completely received
+          print(data)
+          f.write(data)
 
 
-def receive_file_imcp():
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect(("127.0.0.1", 12345)) 
 
-    f = open("recieved.txt", "wb")
-    data = None
-    while True:
-        m = s.recv(1024)
-        data = m
-        if m:
-            while m:
-                m = s.recv(1024)
-                data += m
-            else:
-                break
-    f.write(data)
-    f.close()
-    print("Done receiving")
+
+  print("Done receiving...")
+  s.close()
+
+
+
+
+
+
+
 
 def display_menu():
-    print("1. Receive a file by DNS ")
-    print("2. Receive a file by IMCP ")
-    print("3. Exit ")
+   print("1. Receive a file by DNS ")
+   print("2. Receive a file by ICMP ")
+   print("3. Exit ")
+
 
 def main():
-    while True:
-        display_menu()
-        choice = input("Enter your choice: ")
-        if choice == "1":
-            sniff(filter='udp port 53', prn=receive_file_dns)
-        elif choice == "2":
-            receive_file_imcp()
+   while True:
+       display_menu()
+       choice = input("Enter your choice: ")
+       if choice == "1":
+           receive_file_dns()
+       elif choice == "2":
+           receive_file_icmp()
+       elif choice == "3":
+           print("Exit")
+           break
+       else:
+           print("Invalid choice")       
 
-        elif choice == "3":
-            print("Exit")
-            break
-        else:
-            print("Invalid choice")        
 
 main()
+
+
+
+
+
+
