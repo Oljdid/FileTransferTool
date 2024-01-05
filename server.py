@@ -21,20 +21,8 @@ def receive_file_icmp():
               break  # The file has been completely received
           print(data)
           f.write(data)
-
-
-
-
   print("Done receiving...")
   s.close()
-
-
-
-
-
-
-
-
 def display_menu():
    print("1. Receive a file by DNS ")
    print("2. Receive a file by ICMP ")
