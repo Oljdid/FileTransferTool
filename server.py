@@ -5,7 +5,7 @@ import binascii
 
 def receive_file_dns():
    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-   s.connect(("192.168.110.6", 12345))
+   s.connect(("AdresseIpEnvoyeur", 12345))
    data = s.recv(1024)
    print(f"Received from server: {data.decode()}")
    s.close()
@@ -13,7 +13,7 @@ def receive_file_dns():
 
 def receive_file_icmp():
   s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-  s.connect(("192.168.1.122", 12343))  # Connect to the server
+  s.connect(("AdresseIpEnvoyeur", 12343))  # Connect to the server
   with open("received_file.txt", "wb") as f:
       while True:
           data = s.recv(1024)
