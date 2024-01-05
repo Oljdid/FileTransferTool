@@ -10,7 +10,7 @@ def display_menu():
 
 def send_file_dns():
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.bind(("127.0.0.1", 12345))
+    server_socket.bind(("adresseIpReceveur", 12345))
     server_socket.listen(1)
     print("Server listening on port 12345...")
     while True:
@@ -29,7 +29,7 @@ def send_file_dns():
 
 def send_file_icmp():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.bind(("192.168.1.122", 12343))
+    s.bind(("adresseIpReceveur", 12343))
     s.listen(1)
     c, addr = s.accept()
     print('{} connected.'.format(addr))
